@@ -3,7 +3,6 @@
 пчолко сити это сервер на базе аддона Zcity
 
 ## Discord Сервер:
-**Discord**
 https://discord.gg/6h9kYhYbuy
 
 ## Дополнительная информация
