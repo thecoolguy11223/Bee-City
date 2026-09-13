@@ -166,6 +166,14 @@ function SWEP:Tie(tr)
 
 				org.handcuffed = true
 				ent:SetNetVar("handcuffed",true)
+				if ent:IsPlayer() then
+					if IsValid(ent:GetActiveWeapon()) then
+						if ent:GetActiveWeapon():GetClass() ~= "weapon_hands_sh" then
+							ent:DropWeapon()
+							ent:SelectWeapon("weapon_hands_sh")
+						end
+					end
+				end
 
 				if not criswat then
 					self:Remove()

@@ -354,16 +354,16 @@ if CLIENT then
 				end
 
 				local name = nameThings(i, thing)
-				button.col1 = 100
+				button.col1 = 5
 				button.Paint = function(self, w, h)
-					button.col1 = Lerp(0.1, button.col1, button:IsHovered() and 255 or 100)
+					button.col1 = Lerp(0.1, button.col1, button:IsHovered() and 15 or 5)
 					if button:IsHovered() then
 						button.SoundKD = button.SoundKD or 0
 						if (grid.SoundKD or 0) < CurTime() and button.SoundKD < CurTime() then surface.PlaySound("arc9_eft_shared/generic_mag_pouch_out" .. math.random(7) .. ".ogg") end
 						button.SoundKD = CurTime() + 0.1
 					end
 
-					surface.SetDrawColor(button.col1, 0, 0, 15)
+					surface.SetDrawColor(240, 165, 24, button.col1)
 					surface.DrawRect(0, 0, w, h)
 					local Icon, HaveIcon, Overide, Quad = getIconThing(i, thing, tab)
 					if Icon then
@@ -381,7 +381,7 @@ if CLIENT then
 						surface.DrawTexturedRect(Quad and w / 5 + 5 or 0 - 5, 5, Quad and (w / 2 + 2.5) or (w + 10), Quad and h / 1.3 or h - 10)
 					end
 
-					surface.SetDrawColor(button.col1,0,0,button.col1)
+					surface.SetDrawColor(255,166,0,button.col1 + 25)
 					surface.DrawOutlinedRect(0, 0, w, h, 1)
 					local Text = (tab == "Ammo" and game.GetAmmoName(name)) or language.GetPhrase(name)
 					local SubText = utf8.sub(Text, 17)

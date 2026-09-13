@@ -1,6 +1,6 @@
 local PANEL = {}
 local curent_panel 
-local red_select = Color(192,0,0)
+local red_select = Color(195,125,0)
 
 DISCORD_URL = "https://discord.gg/475EmEdTgH"
 
@@ -95,7 +95,8 @@ local splasheh = {
     'MORE CLUE2022',
     'BACKROOMS == CLUE',
     'HELL IS NEAR',
-    'I WISH YOU GOOD HEALTH, JASON STATHAM'
+    'I WISH YOU GOOD HEALTH, JASON STATHAM',
+    'Да у нас опубликованная версия на гитхабе',
 }
 
 --print(string.upper('I wish you good health, Jason Statham'))
@@ -125,14 +126,13 @@ function PANEL:InitializeMarkup()
         return markup.Parse(text)
     end
 
-    local text = "<font=ZC_MM_Title><colour=255,255,111>Bee</colour>-City</font>\n<font=ZCity_Tiny><colour=255,255,192>" .. gm .. "</colour></font>"
+    local text = "<font=ZC_MM_Title><colour=255,255,111>Bee</colour><colour=255,255,192>-City</colour></font>\n<font=ZCity_Tiny><colour=255,255,192>" .. gm .. "</colour></font>"
     return markup.Parse(text)
 end
 
-local color_red = Color(255,25,25,45)
 local clr_gray = Color(255,255,255,25)
 local clr_verygray = Color(10,10,19,235)
-
+local oldst
 function PANEL:Init()
     self:SetAlpha(0)
     self:SetSize(ScrW(), ScrH())
@@ -164,13 +164,33 @@ function PANEL:Init()
             surface.DrawTexturedRect(0, ScreenScale(27), ScreenScale(35), ScreenScale(27))
         end
 
-        self.Title:Draw(ScreenScale(15), ScreenScale(50), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 255, TEXT_ALIGN_LEFT)
+        self.Title:Draw(ScreenScale(15), ScreenScale(60), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 255, TEXT_ALIGN_LEFT)
     end
-
     self.Buttons = {}
     for k, v in ipairs(Selects) do
         if v.GamemodeOnly and engine.ActiveGamemode() != "zcity" then continue end
         self:AddSelect(lDock, v.Title, v)
+    end
+    local hitbox = vgui.Create("DLabel", lDock ) -- Creates our label
+    hitbox:SetText( "" )
+    hitbox:SizeToContents()
+    hitbox:Center()
+    hitbox:Dock(FILL)
+    hitbox:SetMouseInputEnabled( true )
+    --hitbox:DockMargin(0,ScrH()/60,0,0)
+    --hitbox:SetDraggable(false)
+    
+    function hitbox:DoClick()
+	    sound.PlayFile( "sound/Bee_hurt"..math.random(1,2)..".mp3", "noplay", function(station)
+	        if IsValid(oldst) then
+                oldst:Stop()
+                oldst = nil
+            end
+            if ( IsValid( station ) ) then
+		        oldst = station
+                oldst:Play()
+	        end
+        end)
     end
 
 
@@ -224,7 +244,7 @@ local gradient_d = surface.GetTextureID("vgui/gradient-d")
 local gradient_r = surface.GetTextureID("vgui/gradient-u")
 local gradient_l = surface.GetTextureID("vgui/gradient-l")
 
-local clr_1 = Color(102,0,0,35)
+local clr_1 = Color(255,136,0,35)
 function PANEL:Paint(w,h)
     draw.RoundedBox( 0, 0, 0, w, h, self.ColorBG )
     hg.DrawBlur(self, 5)
@@ -251,7 +271,7 @@ function PANEL:AddSelect( pParent, strTitle, tbl )
     btn.HoveredFunc = tbl.HoveredFunc
     local luaMenu = self 
     if tbl.CreatedFunc then tbl.CreatedFunc(btn, self, luaMenu) end
-    btn.RColor = Color(225,225,225)
+    btn.RColor = Color(255,255,192)
     function btn:DoClick()
         -- ,kz оптимизировать надо, но идёт ошибка(кэшировать бы luaMenu.panelparrent вместо вызова его каждый раз)
         if curent_panel == string.lower(strTitle) then
@@ -321,6 +341,10 @@ end
 
 function PANEL:Close()
     self:AlphaTo( 0, 0.1, 0, function() self:Remove() end)
+    if IsValid(oldst) then
+        oldst:Stop()
+        oldst = nil
+    end
     self:SetKeyboardInputEnabled(false)
     self:SetMouseInputEnabled(false)
 end
