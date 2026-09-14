@@ -2,7 +2,54 @@ local PANEL = {}
 local curent_panel 
 local yellow_select = Color(205, 165, 35)
 
-DISCORD_URL = "https://discord.gg/475EmEdTgH"
+DISCORD_URL = "https://discord.gg/6h9kYhYbuy"
+
+--уж простите но для этих ёбаных букв я использовал ии потому что я ебал эту хуйню
+local function toUpper(str)
+    if not str then return "" end
+    local map = {
+        ["а"] = "А", ["б"] = "Б", ["в"] = "В", ["г"] = "Г", ["д"] = "Д",
+        ["е"] = "Е", ["ё"] = "Ё", ["ж"] = "Ж", ["з"] = "З", ["и"] = "И",
+        ["й"] = "Й", ["к"] = "К", ["л"] = "Л", ["м"] = "М", ["н"] = "Н",
+        ["о"] = "О", ["п"] = "П", ["р"] = "Р", ["с"] = "С", ["т"] = "Т",
+        ["у"] = "У", ["ф"] = "Ф", ["х"] = "Х", ["ц"] = "Ц", ["ч"] = "Ч",
+        ["ш"] = "Ш", ["щ"] = "Щ", ["ъ"] = "Ъ", ["ы"] = "Ы", ["ь"] = "Ь",
+        ["э"] = "Э", ["ю"] = "Ю", ["я"] = "Я"
+    }
+    local result = {}
+    local i = 1
+    local len = utf8.len(str)
+    while i <= len do
+        local char = utf8.sub(str, i, i)
+        local upper = map[char] or string.upper(char)
+        table.insert(result, upper)
+        i = i + 1
+    end
+    return table.concat(result)
+end
+
+local function toLower(str)
+    if not str then return "" end
+    local map = {
+        ["А"] = "а", ["Б"] = "б", ["В"] = "в", ["Г"] = "г", ["Д"] = "д",
+        ["Е"] = "е", ["Ё"] = "ё", ["Ж"] = "ж", ["З"] = "з", ["И"] = "и",
+        ["Й"] = "й", ["К"] = "к", ["Л"] = "л", ["М"] = "м", ["Н"] = "н",
+        ["О"] = "о", ["П"] = "п", ["Р"] = "р", ["С"] = "с", ["Т"] = "т",
+        ["У"] = "у", ["Ф"] = "ф", ["Х"] = "х", ["Ц"] = "ц", ["Ч"] = "ч",
+        ["Ш"] = "ш", ["Щ"] = "щ", ["Ъ"] = "ъ", ["Ы"] = "ы", ["Ь"] = "ь",
+        ["Э"] = "э", ["Ю"] = "ю", ["Я"] = "я"
+    }
+    local result = {}
+    local i = 1
+    local len = utf8.len(str)
+    while i <= len do
+        local char = utf8.sub(str, i, i)
+        local lower = map[char] or string.lower(char)
+        table.insert(result, lower)
+        i = i + 1
+    end
+    return table.concat(result)
+end
 
 local Selects = {
     {Title = "Отключиться", Func = function(luaMenu) RunConsoleCommand("disconnect") end},
@@ -11,19 +58,16 @@ local Selects = {
     {Title = "Роль предателя",
     GamemodeOnly = true,
     CreatedFunc = function(self, parent, luaMenu)
-        local btn = vgui.Create( "DLabel", self )
-        btn:SetText( "SOE" )
-        btn:SetMouseInputEnabled( true )
-        btn:SizeToContents()
-        btn:SetFont( "ZCity_Small" )
-        btn:SetTall( ScreenScale( 15 ) )
-        btn:Dock(BOTTOM)
-        btn:DockMargin(ScreenScale(20),ScreenScale(10),0,0)
-        btn:SetTextColor(Color(255,255,255))
-        btn:InvalidateParent()
-        btn.RColor = Color(225, 225, 225, 0)
-        btn.WColor = Color(225, 225, 225, 255)
-        btn.x = btn:GetX()
+        local container = self:GetParent()
+        local selfa = self
+        local cachedX = nil
+
+        local btnSOE = vgui.Create( "DLabel", container )
+        btnSOE:SetText( "SOE" )
+        btnSOE:SetMouseInputEnabled( true )
+        btnSOE:SetFont( "ZCity_Small" )
+        btnSOE:SetTextColor(Color(240, 240, 240))
+        btnSOE.WColor = Color(240, 240, 240, 255)
 
         function btnSOE:DoClick()
             luaMenu:Close()
@@ -32,24 +76,19 @@ local Selects = {
 
         function btnSOE:Think()
             self.HoverLerp2 = LerpFT(0.2, self.HoverLerp2 or 0, self:IsHovered() and 1 or 0)
-                
-            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(red_select, self.HoverLerp2), self.HoverLerp))
-            self:SetX(self.x + ScreenScaleH(40) + self.HoverLerp * ScreenScaleH(50))
+            self:SetTextColor(self.WColor:Lerp(yellow_select, self.HoverLerp2))
+
+            if cachedX and IsValid(selfa) then
+                self:SetPos(cachedX.soe, selfa:GetY() + (selfa:GetTall() - self:GetTall()) / 2)
+            end
         end
 
-        local btn = vgui.Create( "DLabel", btn )
-        btn:SetText( "STD" )
-        btn:SetMouseInputEnabled( true )
-        btn:SizeToContents()
-        btn:SetFont( "ZCity_Small" )
-        btn:SetTall( ScreenScale( 15 ) )
-        btn:Dock(BOTTOM)
-        btn:DockMargin(0,ScreenScale(2),0,0)
-        btn:SetTextColor(Color(255,255,255))
-        btn:InvalidateParent()
-        btn.RColor = Color(225, 225, 225, 0)
-        btn.WColor = Color(225, 225, 225, 255)
-        btn.x = btn:GetX()
+        local btnSTD = vgui.Create( "DLabel", container )
+        btnSTD:SetText( "STD" )
+        btnSTD:SetMouseInputEnabled( true )
+        btnSTD:SetFont( "ZCity_Small" )
+        btnSTD:SetTextColor(Color(240, 240, 240))
+        btnSTD.WColor = Color(240, 240, 240, 255)
 
         function btnSTD:DoClick()
             luaMenu:Close()
@@ -58,10 +97,33 @@ local Selects = {
 
         function btnSTD:Think()
             self.HoverLerp2 = LerpFT(0.2, self.HoverLerp2 or 0, self:IsHovered() and 1 or 0)
-    
-            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(red_select, self.HoverLerp2), self.HoverLerp))
-            self:SetX(self.x + ScreenScaleH(35))
+            self:SetTextColor(self.WColor:Lerp(yellow_select, self.HoverLerp2))
+
+            if cachedX and IsValid(selfa) then
+                self:SetPos(cachedX.std, selfa:GetY() + (selfa:GetTall() - self:GetTall()) / 2)
+            end
         end
+
+        timer.Simple(0, function()
+            if not IsValid(selfa) or not IsValid(btnSOE) or not IsValid(btnSTD) then return end
+
+            btnSOE:SizeToContents()
+            btnSTD:SizeToContents()
+
+            surface.SetFont(selfa:GetFont())
+            local mainTextW = surface.GetTextSize("Роль предателя")
+
+            surface.SetFont(btnSOE:GetFont())
+            local soeTextW = surface.GetTextSize("SOE")
+
+            local gapSOE = ScreenScaleH(10)
+            local soeX = selfa:GetX() + mainTextW + gapSOE
+
+            local gapSTD = ScreenScaleH(8)
+            local stdX = soeX + soeTextW + gapSTD
+
+            cachedX = {soe = soeX, std = stdX}
+        end)
     end,
     Func = function(luaMenu)
         
@@ -134,12 +196,16 @@ function PANEL:InitializeMarkup()
     if hg.PluvTown.Active then
         local text = "<font=ZC_MM_Title><colour=200,200,200>    </colour>City</font>\n<font=ZCity_Tiny><colour=140,140,140>" .. gm .. "</colour></font>"
         self.SelectedPluv = table.Random(hg.PluvTown.PluvMats)
-
-        return markup.Parse(text)
+        parsed = markup.Parse(text)
+    else
+        local text = "<font=ZC_MM_Title><colour=200,180,100>Bee</colour><colour=200,200,200>-City</colour></font>\n<font=ZCity_Tiny><colour=140,140,140>" .. gm .. "</colour></font>"
+        parsed = markup.Parse(text)
+    end
+    if parsed and parsed.SizeX then
+        self:SetWide(parsed.SizeX + ScreenScale(15))
     end
 
-    local text = "<font=ZC_MM_Title><colour=255,255,111>Bee</colour><colour=255,255,192>-City</colour></font>\n<font=ZCity_Tiny><colour=255,255,192>" .. gm .. "</colour></font>"
-    return markup.Parse(text)
+    return parsed
 end
 
 local clr_gray = Color(150, 150, 150, 80)
@@ -184,28 +250,6 @@ function PANEL:Init()
         if v.GamemodeOnly and engine.ActiveGamemode() != "zcity" then continue end
         self:AddSelect(lDock, v.Title, v)
     end
-    local hitbox = vgui.Create("DLabel", lDock ) -- Creates our label
-    hitbox:SetText( "" )
-    hitbox:SizeToContents()
-    hitbox:Center()
-    hitbox:Dock(FILL)
-    hitbox:SetMouseInputEnabled( true )
-    --hitbox:DockMargin(0,ScrH()/60,0,0)
-    --hitbox:SetDraggable(false)
-    
-    function hitbox:DoClick()
-	    sound.PlayFile( "sound/Bee_hurt"..math.random(1,2)..".mp3", "noplay", function(station)
-	        if IsValid(oldst) then
-                oldst:Stop()
-                oldst = nil
-            end
-            if ( IsValid( station ) ) then
-		        oldst = station
-                oldst:Play()
-	        end
-        end)
-    end
-
 
     local bottomDock = vgui.Create("DPanel", self)
     bottomDock:SetPos(ScreenScale(1), ScrH() - ScrH()/10)
