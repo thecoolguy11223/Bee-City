@@ -2,13 +2,13 @@ local PANEL = {}
 local curent_panel 
 local yellow_select = Color(205, 165, 35)
 
-DISCORD_URL = "https://discord.gg/6h9kYhYbuy"
+DISCORD_URL = "https://discord.gg/475EmEdTgH"
 
 local Selects = {
-    {Title = "Disconnect", Func = function(luaMenu) RunConsoleCommand("disconnect") end},
-    {Title = "Main Menu", Func = function(luaMenu) gui.ActivateGameUI() luaMenu:Close() end},
+    {Title = "Отключиться", Func = function(luaMenu) RunConsoleCommand("disconnect") end},
+    {Title = "Главное меню", Func = function(luaMenu) gui.ActivateGameUI() luaMenu:Close() end},
     {Title = "Discord", Func = function(luaMenu) luaMenu:Close() gui.OpenURL(DISCORD_URL)  end},
-    {Title = "Traitor Role",
+    {Title = "Роль предателя",
     GamemodeOnly = true,
     CreatedFunc = function(self, parent, luaMenu)
         local btn = vgui.Create( "DLabel", self )
@@ -19,23 +19,21 @@ local Selects = {
         btn:SetTall( ScreenScale( 15 ) )
         btn:Dock(BOTTOM)
         btn:DockMargin(ScreenScale(20),ScreenScale(10),0,0)
-        btn:SetTextColor(Color(255,255,192))
+        btn:SetTextColor(Color(255,255,255))
         btn:InvalidateParent()
         btn.RColor = Color(225, 225, 225, 0)
-        btn.WColor = Color(255,255,192,255)
+        btn.WColor = Color(225, 225, 225, 255)
         btn.x = btn:GetX()
 
-        function btn:DoClick()
+        function btnSOE:DoClick()
             luaMenu:Close()
             hg.SelectPlayerRole(nil, "soe")
         end
-    
-        local selfa = self
-        function btn:Think()
-            self.HoverLerp = selfa.HoverLerp
+
+        function btnSOE:Think()
             self.HoverLerp2 = LerpFT(0.2, self.HoverLerp2 or 0, self:IsHovered() and 1 or 0)
                 
-            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(yellow_select, self.HoverLerp2), self.HoverLerp))
+            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(red_select, self.HoverLerp2), self.HoverLerp))
             self:SetX(self.x + ScreenScaleH(40) + self.HoverLerp * ScreenScaleH(50))
         end
 
@@ -47,22 +45,21 @@ local Selects = {
         btn:SetTall( ScreenScale( 15 ) )
         btn:Dock(BOTTOM)
         btn:DockMargin(0,ScreenScale(2),0,0)
-        btn:SetTextColor(Color(255,255,192))
+        btn:SetTextColor(Color(255,255,255))
         btn:InvalidateParent()
         btn.RColor = Color(225, 225, 225, 0)
-        btn.WColor = Color(255,255,192,255)
+        btn.WColor = Color(225, 225, 225, 255)
         btn.x = btn:GetX()
 
-        function btn:DoClick()
+        function btnSTD:DoClick()
             luaMenu:Close()
             hg.SelectPlayerRole(nil, "standard")
         end
-    
-        function btn:Think()
-            self.HoverLerp = selfa.HoverLerp
+
+        function btnSTD:Think()
             self.HoverLerp2 = LerpFT(0.2, self.HoverLerp2 or 0, self:IsHovered() and 1 or 0)
     
-            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(yellow_select, self.HoverLerp2), self.HoverLerp))
+            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(red_select, self.HoverLerp2), self.HoverLerp))
             self:SetX(self.x + ScreenScaleH(35))
         end
     end,
@@ -70,14 +67,14 @@ local Selects = {
         
     end,
     },
-    {Title = "Achievements", Func = function(luaMenu,pp) 
+    {Title = "Достижения", Func = function(luaMenu,pp) 
         hg.DrawAchievmentsMenu(pp)
     end},
-    {Title = "Settings", Func = function(luaMenu,pp) 
+    {Title = "Настройки", Func = function(luaMenu,pp) 
         hg.DrawSettings(pp) 
     end},
-    {Title = "Appearance", Func = function(luaMenu,pp) hg.CreateApperanceMenu(pp) end},
-    {Title = "Return", Func = function(luaMenu) luaMenu:Close() end},
+    {Title = "Внешность", Func = function(luaMenu,pp) hg.CreateApperanceMenu(pp) end},
+    {Title = "Назад", Func = function(luaMenu) luaMenu:Close() end},
 }
 
 local splasheh = {
@@ -95,8 +92,7 @@ local splasheh = {
     'MORE CLUE2022',
     'BACKROOMS == CLUE',
     'HELL IS NEAR',
-    'I WISH YOU GOOD HEALTH, JASON STATHAM',
-    'Да у нас опубликованная версия на гитхабе',
+    'I WISH YOU GOOD HEALTH, JASON STATHAM'
 }
 
 --print(string.upper('I wish you good health, Jason Statham'))
@@ -104,9 +100,25 @@ surface.CreateFont("ZC_MM_Title", {
     font = "Bahnschrift",
     size = ScreenScale(40),
     weight = 800,
-    antialias = true
+    antialias = true,
+    extended = true
 })
--- local Title = markup.Parse("error")
+
+surface.CreateFont("ZCity_Small", {
+    font = "Bahnschrift",
+    size = ScreenScale(15),
+    weight = 500,
+    antialias = true,
+    extended = true
+})
+
+surface.CreateFont("ZCity_Tiny", {
+    font = "Bahnschrift",
+    size = ScreenScale(8),
+    weight = 400,
+    antialias = true,
+    extended = true
+})
 
 local Pluv = Material("pluv/pluvkid.jpg")
 
@@ -122,21 +134,17 @@ function PANEL:InitializeMarkup()
     if hg.PluvTown.Active then
         local text = "<font=ZC_MM_Title><colour=200,200,200>    </colour>City</font>\n<font=ZCity_Tiny><colour=140,140,140>" .. gm .. "</colour></font>"
         self.SelectedPluv = table.Random(hg.PluvTown.PluvMats)
-        parsed = markup.Parse(text)
-    else
-        local text = "<font=ZC_MM_Title><colour=200,180,100>Bee</colour><colour=200,200,200>-City</colour></font>\n<font=ZCity_Tiny><colour=140,140,140>" .. gm .. "</colour></font>"
-        parsed = markup.Parse(text)
-    end
-    if parsed and parsed.SizeX then
-        self:SetWide(parsed.SizeX + ScreenScale(15))
+
+        return markup.Parse(text)
     end
 
-    return parsed
+    local text = "<font=ZC_MM_Title><colour=255,255,111>Bee</colour><colour=255,255,192>-City</colour></font>\n<font=ZCity_Tiny><colour=255,255,192>" .. gm .. "</colour></font>"
+    return markup.Parse(text)
 end
 
-local clr_gray = Color(255,255,255,25)
-local clr_verygray = Color(10,10,19,235)
-local oldst
+local clr_gray = Color(150, 150, 150, 80)
+local clr_verygray = Color(15, 15, 15, 235)
+
 function PANEL:Init()
     self:SetAlpha(0)
     self:SetSize(ScrW(), ScrH())
@@ -168,22 +176,23 @@ function PANEL:Init()
             surface.DrawTexturedRect(0, ScreenScale(27), ScreenScale(35), ScreenScale(27))
         end
 
-        self.Title:Draw(ScreenScale(15), ScreenScale(60), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 255, TEXT_ALIGN_LEFT)
+        self.Title:Draw(ScreenScale(15), ScreenScale(50), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 255, TEXT_ALIGN_LEFT)
     end
+
     self.Buttons = {}
     for k, v in ipairs(Selects) do
         if v.GamemodeOnly and engine.ActiveGamemode() != "zcity" then continue end
         self:AddSelect(lDock, v.Title, v)
     end
-    
-    --hitbox:DockMargin(0,ScrH()/60,0,0)
-    --hitbox:SetDraggable(false)
     local hitbox = vgui.Create("DLabel", lDock ) -- Creates our label
     hitbox:SetText( "" )
     hitbox:SizeToContents()
     hitbox:Center()
     hitbox:Dock(FILL)
     hitbox:SetMouseInputEnabled( true )
+    --hitbox:DockMargin(0,ScrH()/60,0,0)
+    --hitbox:SetDraggable(false)
+    
     function hitbox:DoClick()
 	    sound.PlayFile( "sound/Bee_hurt"..math.random(1,2)..".mp3", "noplay", function(station)
 	        if IsValid(oldst) then
@@ -288,13 +297,13 @@ function PANEL:AddSelect( pParent, strTitle, tbl )
     btn.HoveredFunc = tbl.HoveredFunc
     local luaMenu = self 
     if tbl.CreatedFunc then tbl.CreatedFunc(btn, self, luaMenu) end
-    btn.RColor = Color(255,255,192)
+    btn.RColor = Color(220, 220, 220)
     function btn:DoClick()
         -- ,kz оптимизировать надо, но идёт ошибка(кэшировать бы luaMenu.panelparrent вместо вызова его каждый раз)
-        if curent_panel == string.lower(strTitle) then
-			for i = 1, 3 do
-				surface.PlaySound("shitty/tap_release.wav")
-			end
+        if curent_panel == toLower(strTitle) then
+            for i = 1, 3 do
+                surface.PlaySound("shitty/tap_release.wav")
+            end
             luaMenu.panelparrent:AlphaTo(0,0.2,0,function()
                 luaMenu.panelparrent:Remove()
                 luaMenu.panelparrent = nil
@@ -303,7 +312,6 @@ function PANEL:AddSelect( pParent, strTitle, tbl )
                 luaMenu.panelparrent:SetPos(some_coordinates_x, 0)
                 luaMenu.panelparrent:SetSize(some_size_x, some_size_y)
                 luaMenu.panelparrent.Paint = function(this, w, h) end
-                --btn.Func(luaMenu,luaMenu.panelparrent)
                 curent_panel = nil
             end)
             return 
@@ -320,11 +328,11 @@ function PANEL:AddSelect( pParent, strTitle, tbl )
             luaMenu.panelparrent:SetSize(some_size_x, some_size_y)
             luaMenu.panelparrent.Paint = function(this, w, h) end
             btn.Func(luaMenu,luaMenu.panelparrent)
-            curent_panel = string.lower(strTitle)
+            curent_panel = toLower(strTitle)
         end)
-		for i = 1, 3 do
-			surface.PlaySound("shitty/tap_depress.wav")
-		end
+        for i = 1, 3 do
+            surface.PlaySound("shitty/tap_depress.wav")
+        end
     end
 
     function btn:Think()
@@ -333,23 +341,23 @@ function PANEL:AddSelect( pParent, strTitle, tbl )
         local v = self.HoverLerp
         self:SetTextColor(self.RColor:Lerp(yellow_select, v))
 
-        local targetText = (self:IsHovered()) and string.upper(strTitle) or strTitle
+        local targetText = (self:IsHovered()) and toUpper(strTitle) or strTitle
         local crw = self:GetText()
 
-        if (crw ~= targetText) or (curent_panel == string.lower(strTitle)) then
+        if (crw ~= targetText) or (curent_panel == toLower(strTitle)) then
             local ntxt = ""
-            local will_text = (curent_panel == string.lower(strTitle) and not strTitle == 'Traitor Role') and '[ '..string.upper(strTitle)..' ]' or strTitle
-            for i = 1, #will_text do
-                local char = will_text:sub(i, i)
-                if i <= math.ceil(#will_text * v) then
-                    ntxt = ntxt .. string.upper(char)
+            local will_text = (curent_panel == toLower(strTitle) and not strTitle == 'Роль предателя') and '[ '..toUpper(strTitle)..' ]' or strTitle
+            for i = 1, utf8.len(will_text) do
+                local char = utf8.sub(will_text, i, i)
+                if i <= math.ceil(utf8.len(will_text) * v) then
+                    ntxt = ntxt .. toUpper(char)
                 else
                     ntxt = ntxt .. char
                 end
             end
-			if self:GetText() ~= ntxt then
-				surface.PlaySound("shitty/tap-resonant.wav")
-			end
+            if self:GetText() ~= ntxt then
+                surface.PlaySound("shitty/tap-resonant.wav")
+            end
             self:SetText(ntxt)
         end
         self:SizeToContents()
@@ -358,10 +366,6 @@ end
 
 function PANEL:Close()
     self:AlphaTo( 0, 0.1, 0, function() self:Remove() end)
-    if IsValid(oldst) then
-        oldst:Stop()
-        oldst = nil
-    end
     self:SetKeyboardInputEnabled(false)
     self:SetMouseInputEnabled(false)
 end
