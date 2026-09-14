@@ -275,27 +275,31 @@ surface.CreateFont("ZB_TDM_DESCSMALL", {
 
 local function PaintFrame(self,w,h)
 	BlurBackground(self)
-
-	surface.SetDrawColor( 255, 0, 0, 128)
+	local color1 = lply:Team() == 0 and Color(255, 0, 0, 128) or Color(0, 20, 85, 128)
+	surface.SetDrawColor(color1)
     surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 end
 
 local function PaintPanel(self,w,h)
+	local color1 = lply:Team() == 0 and Color(255, 0, 0, 128) or Color(0, 20, 85, 128)
 	surface.SetDrawColor( 0, 0, 0,155)
     surface.DrawRect( 0, 0, w, h, 2.5 )
-	surface.SetDrawColor( 255, 0, 0, 128)
+	surface.SetDrawColor(color1)
     surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 end
 
 local gradient_l = Material("vgui/gradient-l")
 
 local function PaintPanel1(self,w,h)
+	local lply = LocalPlayer()
+	local color1 = lply:Team() == 0 and Color(255, 0, 0, 128) or Color(0, 20, 85, 128)
+	local color2 = lply:Team() == 0 and Color(155, 0, 0, 55) or Color(0, 10, 150, 55)
 	surface.SetDrawColor( 0, 0, 0,155)
     surface.DrawRect( 0, 0, w, h, 2.5 )
-	surface.SetDrawColor( 255, 0, 0, 128)
+	surface.SetDrawColor(color1)
     surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 	draw.RoundedBox( 0, 2.5, 2.5, w-5, h-5, Color( 0, 0, 0, 140) )
-    surface.SetDrawColor(155, 0, 0, 55)
+    surface.SetDrawColor(color2)
     surface.SetMaterial(gradient_l)
     surface.DrawTexturedRect( 0, 0, w/1.5, h )
 end

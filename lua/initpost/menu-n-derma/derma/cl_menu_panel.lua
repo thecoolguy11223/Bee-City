@@ -1,8 +1,8 @@
 local PANEL = {}
 local curent_panel 
-local red_select = Color(195,125,0)
+local yellow_select = Color(205, 165, 35)
 
-DISCORD_URL = "https://discord.gg/475EmEdTgH"
+DISCORD_URL = "https://discord.gg/6h9kYhYbuy"
 
 local Selects = {
     {Title = "Disconnect", Func = function(luaMenu) RunConsoleCommand("disconnect") end},
@@ -19,10 +19,10 @@ local Selects = {
         btn:SetTall( ScreenScale( 15 ) )
         btn:Dock(BOTTOM)
         btn:DockMargin(ScreenScale(20),ScreenScale(10),0,0)
-        btn:SetTextColor(Color(255,255,255))
+        btn:SetTextColor(Color(255,255,192))
         btn:InvalidateParent()
         btn.RColor = Color(225, 225, 225, 0)
-        btn.WColor = Color(225, 225, 225, 255)
+        btn.WColor = Color(255,255,192,255)
         btn.x = btn:GetX()
 
         function btn:DoClick()
@@ -35,7 +35,7 @@ local Selects = {
             self.HoverLerp = selfa.HoverLerp
             self.HoverLerp2 = LerpFT(0.2, self.HoverLerp2 or 0, self:IsHovered() and 1 or 0)
                 
-            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(red_select, self.HoverLerp2), self.HoverLerp))
+            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(yellow_select, self.HoverLerp2), self.HoverLerp))
             self:SetX(self.x + ScreenScaleH(40) + self.HoverLerp * ScreenScaleH(50))
         end
 
@@ -47,10 +47,10 @@ local Selects = {
         btn:SetTall( ScreenScale( 15 ) )
         btn:Dock(BOTTOM)
         btn:DockMargin(0,ScreenScale(2),0,0)
-        btn:SetTextColor(Color(255,255,255))
+        btn:SetTextColor(Color(255,255,192))
         btn:InvalidateParent()
         btn.RColor = Color(225, 225, 225, 0)
-        btn.WColor = Color(225, 225, 225, 255)
+        btn.WColor = Color(255,255,192,255)
         btn.x = btn:GetX()
 
         function btn:DoClick()
@@ -62,7 +62,7 @@ local Selects = {
             self.HoverLerp = selfa.HoverLerp
             self.HoverLerp2 = LerpFT(0.2, self.HoverLerp2 or 0, self:IsHovered() and 1 or 0)
     
-            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(red_select, self.HoverLerp2), self.HoverLerp))
+            self:SetTextColor(self.RColor:Lerp(self.WColor:Lerp(yellow_select, self.HoverLerp2), self.HoverLerp))
             self:SetX(self.x + ScreenScaleH(35))
         end
     end,
@@ -111,23 +111,27 @@ surface.CreateFont("ZC_MM_Title", {
 local Pluv = Material("pluv/pluvkid.jpg")
 
 function PANEL:InitializeMarkup()
-	local mapname = game.GetMap()
-	local prefix = string.find(mapname, "_")
-	if prefix then
-		mapname = string.sub(mapname, prefix + 1)
-	end
-	local gm = splasheh[math.random(#splasheh)] .. " | " .. string.NiceName(mapname) 
+    local mapname = game.GetMap()
+    local prefix = string.find(mapname, "_")
+    if prefix then
+        mapname = string.sub(mapname, prefix + 1)
+    end
+    local gm = splasheh[math.random(#splasheh)] .. " | " .. string.NiceName(mapname) 
 
+    local parsed
     if hg.PluvTown.Active then
-        local text = "<font=ZC_MM_Title><colour=255,255,111>    </colour>City</font>\n<font=ZCity_Tiny><colour=255,255,192>" .. gm .. "</colour></font>"
-
+        local text = "<font=ZC_MM_Title><colour=200,200,200>    </colour>City</font>\n<font=ZCity_Tiny><colour=140,140,140>" .. gm .. "</colour></font>"
         self.SelectedPluv = table.Random(hg.PluvTown.PluvMats)
-
-        return markup.Parse(text)
+        parsed = markup.Parse(text)
+    else
+        local text = "<font=ZC_MM_Title><colour=200,180,100>Bee</colour><colour=200,200,200>-City</colour></font>\n<font=ZCity_Tiny><colour=140,140,140>" .. gm .. "</colour></font>"
+        parsed = markup.Parse(text)
+    end
+    if parsed and parsed.SizeX then
+        self:SetWide(parsed.SizeX + ScreenScale(15))
     end
 
-    local text = "<font=ZC_MM_Title><colour=255,255,111>Bee</colour><colour=255,255,192>-City</colour></font>\n<font=ZCity_Tiny><colour=255,255,192>" .. gm .. "</colour></font>"
-    return markup.Parse(text)
+    return parsed
 end
 
 local clr_gray = Color(255,255,255,25)
@@ -171,15 +175,15 @@ function PANEL:Init()
         if v.GamemodeOnly and engine.ActiveGamemode() != "zcity" then continue end
         self:AddSelect(lDock, v.Title, v)
     end
+    
+    --hitbox:DockMargin(0,ScrH()/60,0,0)
+    --hitbox:SetDraggable(false)
     local hitbox = vgui.Create("DLabel", lDock ) -- Creates our label
     hitbox:SetText( "" )
     hitbox:SizeToContents()
     hitbox:Center()
     hitbox:Dock(FILL)
     hitbox:SetMouseInputEnabled( true )
-    --hitbox:DockMargin(0,ScrH()/60,0,0)
-    --hitbox:SetDraggable(false)
-    
     function hitbox:DoClick()
 	    sound.PlayFile( "sound/Bee_hurt"..math.random(1,2)..".mp3", "noplay", function(station)
 	        if IsValid(oldst) then
@@ -244,15 +248,28 @@ local gradient_d = surface.GetTextureID("vgui/gradient-d")
 local gradient_r = surface.GetTextureID("vgui/gradient-u")
 local gradient_l = surface.GetTextureID("vgui/gradient-l")
 
-local clr_1 = Color(255,136,0,35)
+local clr_yellow_glow_top = Color(130, 100, 10, 16)
+local clr_yellow_glow_bottom = Color(100, 78, 8, 10)
+local clr_yellow_glow_ambient = Color(85, 65, 6, 6)
+
 function PANEL:Paint(w,h)
     draw.RoundedBox( 0, 0, 0, w, h, self.ColorBG )
     hg.DrawBlur(self, 5)
+    
     surface.SetDrawColor( self.ColorBG )
     surface.SetTexture( gradient_l )
     surface.DrawTexturedRect(0,0,w,h)
-    surface.SetDrawColor( clr_1 )
+    
+    surface.SetDrawColor( clr_yellow_glow_top )
     surface.SetTexture( gradient_d )
+    surface.DrawTexturedRect(0,0,w,h)
+    
+    surface.SetDrawColor( clr_yellow_glow_bottom )
+    surface.SetTexture( gradient_r )
+    surface.DrawTexturedRect(0,0,w,h)
+    
+    surface.SetDrawColor( clr_yellow_glow_ambient )
+    surface.SetTexture( gradient_l )
     surface.DrawTexturedRect(0,0,w,h)
 end
 
@@ -314,7 +331,7 @@ function PANEL:AddSelect( pParent, strTitle, tbl )
         self.HoverLerp = LerpFT(0.2, self.HoverLerp or 0, (self:IsHovered() or (IsValid(self:GetChild(0)) and self:GetChild(0):IsHovered()) or (IsValid(self:GetChild(0)) and IsValid(self:GetChild(0):GetChild(0)) and self:GetChild(0):GetChild(0):IsHovered())) and 1 or 0)
 
         local v = self.HoverLerp
-        self:SetTextColor(self.RColor:Lerp(red_select, v))
+        self:SetTextColor(self.RColor:Lerp(yellow_select, v))
 
         local targetText = (self:IsHovered()) and string.upper(strTitle) or strTitle
         local crw = self:GetText()

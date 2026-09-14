@@ -13,6 +13,8 @@ xbars = 17
 ybars = 30
 
 gradient_l = Material("vgui/gradient-l")
+local gradient_d = Material("vgui/gradient-d")
+local gradient_u = Material("vgui/gradient-u")
 
 local blur = Material("pp/blurscreen")
 local blur2 = Material("effects/shaders/zb_blur" )
@@ -29,18 +31,21 @@ local font = function() -- hg_coolvetica:GetBool() and "Coolvetica" or "Bahnschr
 end
 
 surface.CreateFont("ZCity_setiings_tiny", {
+	extended = true,
 	font = font(),
 	size = ScreenScale(7),
 	weight = 100
 })
 
 surface.CreateFont("ZCity_setiings_fine", {
+	extended = true,
 	font = font(),
 	size = ScreenScale(10),
 	weight = 100
 })
 
 surface.CreateFont("ZCity_setiings_category", {
+	extended = true,
 	font = font(),
 	size = ScreenScale(15),
 	weight = 100
@@ -126,12 +131,12 @@ function hg.CreateCategory(ctgName, ParentPanel, yPos)
     pppanel:SetPos(ParentPanel:GetWide() / 2 -pppanel:GetWide() / 2, yPos)
     --pppanel:SetText(ctgName)
     pppanel.Paint = function(self,w,h)
-        surface.SetDrawColor(60,60,60,145)
+        surface.SetDrawColor(25, 20, 8, 145)
         surface.DrawRect(0, 0, w, h)
-		surface.SetDrawColor(42, 42, 42, 184)
+		surface.SetDrawColor(205, 165, 35, 80)
 		surface.DrawRect(0, h-5, w, 5)
     
-        draw.SimpleText(ctgName, 'ZCity_setiings_category', w / 2, h / 2, color3, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(ctgName, 'ZCity_setiings_category', w / 2, h / 2, Color(200, 180, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
     
     return pppanel
@@ -174,14 +179,14 @@ local function SetConVarValue(convar, value)
     RunConsoleCommand(name, tostring(value))
 end
 
-local clr_1 = Color(255,255,255,104)
-local clr_2 = Color(122,122,122,104)
-local clr_3 = Color(28,28,28)
+local clr_1 = Color(220,220,220,200)
+local clr_2 = Color(150,150,150,80)
+local clr_3 = Color(15,15,15)
 local clr_4 = Color(0, 0, 0, 30)
-local clr_5 = Color(30, 29, 29, 30)
-local clr_6 = Color(255, 255, 255, 100)
-local clr_7 = Color(255, 255, 255, 200)
-local clr_8 = Color(70, 130, 180)
+local clr_5 = Color(30, 24, 8, 30)
+local clr_6 = Color(205, 165, 35, 100)
+local clr_7 = Color(220, 220, 220, 200)
+local clr_8 = Color(205, 165, 35)
 function hg.CreateButton(buttonData, convarName, ParentPanel, yPos)
     local convar = GetConVar(convarName)
 
@@ -197,9 +202,9 @@ function hg.CreateButton(buttonData, convarName, ParentPanel, yPos)
     
     convarType = buttonData[6] or hg.GetConVarType(convar)
     pppanel.Paint = function(self,w,h)
-        surface.SetDrawColor(43, 43, 43,145)
+        surface.SetDrawColor(20, 18, 10,145)
         surface.DrawRect(0, 0, w, h)
-		surface.SetDrawColor(47, 47, 47,145)
+		surface.SetDrawColor(40, 32, 10,145)
 		surface.DrawRect(0, h-3, w, 3)
         
         draw.SimpleText(buttonData[3], 'ZCity_setiings_fine', 30, h / 2 -height2/2.5, clr_1, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
@@ -223,9 +228,9 @@ function hg.CreateButton(buttonData, convarName, ParentPanel, yPos)
             end
             
             local bgColor = Color(
-                Lerp(animProgress, 180, 80),  
-                Lerp(animProgress, 30, 120),  
-                Lerp(animProgress, 30, 50)   
+                Lerp(animProgress, 80, 205),
+                Lerp(animProgress, 65, 165),
+                Lerp(animProgress, 20, 35)
             )
             
             local shadowColor = Color(0, 0, 0, Lerp(animProgress, 150, 40))
@@ -299,9 +304,9 @@ function hg.CreateButton(buttonData, convarName, ParentPanel, yPos)
         
     
         textEntry.Paint = function(self, w, h)
-            surface.SetDrawColor(30, 30, 30, 255)
+            surface.SetDrawColor(15, 15, 15, 255)
             surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(60, 60, 60, 255)
+            surface.SetDrawColor(205, 165, 35, 180)
             surface.DrawOutlinedRect(0, 0, w, h)
             
             self:DrawTextEntryText(color_white, clr_8, color_white)
@@ -321,10 +326,10 @@ function hg.DrawSettings(ParentPanel)
     ParentPanel:SetAlpha(0)
     ParentPanel.Paint = function(self,w,h)
 
-        surface.SetDrawColor(28,28,28,255)
+        surface.SetDrawColor(15,15,15,255)
         surface.DrawRect(0, 0, w, h)
 
-        surface.SetDrawColor(107, 107, 107,20)
+        surface.SetDrawColor(205, 165, 35,16)
 
         for i = 1, (ybars + 1) do
             surface.DrawRect((sw / ybars) * i - (CurTime() * 30 % (sw / ybars)), 0, ScreenScale(1), sh)
@@ -340,8 +345,20 @@ function hg.DrawSettings(ParentPanel)
         surface.SetMaterial(gradient_l)
         surface.DrawTexturedRect(0, 0, border_size, sh)
 		surface.SetMaterial(blur)
-        surface.SetDrawColor(28,28,28,208)
+        surface.SetDrawColor(15,15,15,208)
         surface.DrawRect(0, 0, w, h)
+
+        surface.SetDrawColor(130, 100, 10, 16)
+        surface.SetMaterial(gradient_d)
+        surface.DrawTexturedRect(0, 0, w, h)
+
+        surface.SetDrawColor(100, 78, 8, 10)
+        surface.SetMaterial(gradient_u)
+        surface.DrawTexturedRect(0, 0, w, h)
+
+        surface.SetDrawColor(85, 65, 6, 6)
+        surface.SetMaterial(gradient_l)
+        surface.DrawTexturedRect(0, 0, w, h)
     end
     hg.DrawBlur(ParentPanel, 5)
     ParentPanel:AlphaTo(255,0.15,0)

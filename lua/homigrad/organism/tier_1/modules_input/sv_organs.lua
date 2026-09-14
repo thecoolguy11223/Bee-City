@@ -102,7 +102,17 @@ input_list.brain = function(org, bone, dmg, dmgInfo)
 		
 		if !ent.organism.SpawnedBrainChunks and math.random(5) == 1 then
 			SpawnMeatGore(ent, dmgPos + dirCool * 5, 3, dirCool * 1000, 0.4)
+			--huyhuyhuyeffect
 			ent.organism.SpawnedBrainChunks = true
+			ent:EmitSound("player/headshot"..math.random(1,2)..".wav")
+			for i = 1, 10 do
+			local effectdata = EffectData()
+			effectdata:SetOrigin(dmgPos)
+			effectdata:SetRadius(dmg / 10)
+			effectdata:SetMagnitude(dmg / 10)
+			effectdata:SetScale(1000)
+			util.Effect("BloodImpact",effectdata)
+			end
 		end
 	end
 

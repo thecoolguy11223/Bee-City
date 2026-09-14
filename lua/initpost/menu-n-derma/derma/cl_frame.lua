@@ -15,8 +15,8 @@ function PANEL:Init()
 
     self.DrawBorder = true
 
-    self.ColorBG = Color(color_blacky:Unpack())
-    self.ColorBR = Color(color_reddy:Unpack())
+    self.ColorBG = Color(Color(25,25,30,220):Unpack())
+    self.ColorBR = Color(Color(215,130,0,240):Unpack())
     self.BlurStrengh = 2
 
     timer.Simple(0,function()

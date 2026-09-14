@@ -421,15 +421,16 @@ hook.Add("InitPostEntity", "furryhuy", function()
 end)
 
 local colGray = Color(122,122,122,255)
-local colBlue = Color(130,10,10)
-local colBlueUp = Color(160,30,30)
+local colBlue = Color(100,77,2)
+local colBlueUp = Color(131,100,0)
 local col = Color(255,255,255,255)
 
 local colSpect1 = Color(75,75,75,255)
 local colSpect2 = Color(85,85,85,255)
 
-local colorBG = Color(55,55,55,255)
+local colorBG = Color(21, 14,0,125)
 local colorBGBlacky = Color(40,40,40,255)
+local colah = Color(205,165,0,125)
 
 hg.muteall = false
 hg.mutespect = false
@@ -512,7 +513,7 @@ function GM:ScoreboardShow()
 	Dynamic = 0
 	scoreBoardMenu = vgui.Create("ZFrame")
 
-	local sizeX,sizeY = ScrW() / 1.3 ,ScrH() / 1.2
+	local sizeX,sizeY = ScrW() / 1.15 ,ScrH() / 1.15
 	local posX,posY = ScrW() / 2 - sizeX / 2,ScrH() / 2 - sizeY / 2
 
 	scoreBoardMenu:SetPos(posX,posY)
@@ -522,8 +523,8 @@ function GM:ScoreboardShow()
 	scoreBoardMenu:ShowCloseButton( false )
 
 	local muteallbut = vgui.Create("DButton", scoreBoardMenu)
-	local w, h = ScreenScale(30),ScreenScale(6)
-	muteallbut:SetPos(scoreBoardMenu:GetWide()-w*2.3,scoreBoardMenu:GetTall() - h * 1.5)
+	local w, h = ScreenScale(30),ScreenScale(10)
+	muteallbut:SetPos(scoreBoardMenu:GetWide()-w*2.65,scoreBoardMenu:GetTall() - h * 1.5)
 	muteallbut:SetSize(w, h)
 	muteallbut:SetText("Mute all")
 	
@@ -555,7 +556,7 @@ function GM:ScoreboardShow()
 	end
 
 	local mutespectbut = vgui.Create("DButton", scoreBoardMenu)
-	local w, h = ScreenScale(30),ScreenScale(6)
+	local w, h = ScreenScale(40),ScreenScale(10)
 	mutespectbut:SetPos(scoreBoardMenu:GetWide()-w*1.2,scoreBoardMenu:GetTall() - h * 1.5)
 	mutespectbut:SetSize(w, h)
 	mutespectbut:SetText("Mute spectators")
@@ -593,7 +594,7 @@ function GM:ScoreboardShow()
 	local ServerName = GetHostName() or "ZCity | Developer Server | #01"
 	local tick
 	scoreBoardMenu.PaintOver = function(self,w,h)
-		surface.SetDrawColor( 255, 0, 0, 128)
+		surface.SetDrawColor( colah)
         surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 
 		surface.SetFont( "ZB_InterfaceLarge" )
@@ -642,7 +643,7 @@ function GM:ScoreboardShow()
 		end
 
 		SPECTATE.Paint = function(self,w,h)
-			surface.SetDrawColor( 255, 0, 0, 128)
+			surface.SetDrawColor(colah)
 			surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 			surface.SetFont( "ZB_InterfaceMedium" )
 			surface.SetTextColor(col.r,col.g,col.b,col.a)
@@ -667,7 +668,7 @@ function GM:ScoreboardShow()
 		end
 
 		PLAYING.Paint = function(self,w,h)
-			surface.SetDrawColor( 255, 0, 0, 128)
+			surface.SetDrawColor( colah)
 			surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 			surface.SetFont( "ZB_InterfaceMedium" )
 			surface.SetTextColor(col.r,col.g,col.b,col.a)
@@ -681,14 +682,14 @@ function GM:ScoreboardShow()
 
 	local DScrollPanel = vgui.Create("DScrollPanel", scoreBoardMenu)
 	DScrollPanel:SetPos(10, ScreenScaleH(58))
-	DScrollPanel:SetSize(sizeX/2 - 10, sizeY - ScreenScaleH(72))
+	DScrollPanel:SetSize(sizeX/2 - 10, sizeY - ScreenScaleH(84))
 	function DScrollPanel:Paint( w, h )
 		-- BlurBackground(self)
 
-		surface.SetDrawColor(0, 0, 0, 125)
+		surface.SetDrawColor(colorBG)
 		surface.DrawRect(0, 0, w, h)
 
-		surface.SetDrawColor( 255, 0, 0, 128)
+		surface.SetDrawColor(colah)
         surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 	end
 
@@ -720,7 +721,7 @@ function GM:ScoreboardShow()
 			surface.SetDrawColor(colBlueUp.r, colBlueUp.g, colBlueUp.b, colBlueUp.a)
 			surface.DrawRect(0, 0, w, h)
 			surface.SetDrawColor(colBlue.r, colBlue.g, colBlue.b, colBlue.a)
-			surface.DrawRect(0, h / 2, w, h / 2)
+			surface.DrawRect(0, h / 1.9, w, h / 2)
 	
 			surface.SetFont("ZB_InterfaceMediumLarge")
 			surface.SetTextColor(col.r, col.g, col.b, col.a)
@@ -758,14 +759,14 @@ function GM:ScoreboardShow()
 	-- SPECTATORS
 	local DScrollPanel = vgui.Create("DScrollPanel", scoreBoardMenu)
 	DScrollPanel:SetPos(sizeX/2 + 5, ScreenScaleH(58))
-	DScrollPanel:SetSize(sizeX/2 - 15, sizeY - ScreenScaleH(72))
+	DScrollPanel:SetSize(sizeX/2 - 15, sizeY - ScreenScaleH(84))
 	function DScrollPanel:Paint( w, h )
 		-- BlurBackground(self)
 
-		surface.SetDrawColor(0, 0, 0, 125)
+		surface.SetDrawColor(colorBG)
 		surface.DrawRect(0, 0, w, h)
 
-		surface.SetDrawColor( 255, 0, 0, 128)
+		surface.SetDrawColor( colah)
         surface.DrawOutlinedRect( 0, 0, w, h, 2.5 )
 	end
 

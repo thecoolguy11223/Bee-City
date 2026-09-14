@@ -1,8 +1,8 @@
 --\\
 hg.VGUI = hg.VGUI or {}
-hg.VGUI.MainColor = Color(150, 0 ,0)
-hg.VGUI.SecondaryColor = Color(155,0,0,240)
-hg.VGUI.BackgroundColor = Color(25,25,35,220)
+hg.VGUI.MainColor = Color(205, 165, 35)
+hg.VGUI.SecondaryColor = Color(255, 100, 0)
+hg.VGUI.BackgroundColor = Color(64,64,80,220)
 hg.VGUI.MainSkin = "ZCity"
 
 function hg.GetMainSkin()

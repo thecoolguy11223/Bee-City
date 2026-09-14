@@ -8,11 +8,11 @@ end
 --//
 
 MODE.TypeSounds = {
-	["standard"] = {"snd_jack_hmcd_psycho.mp3","snd_jack_hmcd_shining.mp3"},
-	["soe"] = "snd_jack_hmcd_disaster.mp3",
-	["gunfreezone"] = "snd_jack_hmcd_panic.mp3" ,
+	["standard"] = {"snd_mann_standard1.mp3", "snd_mann_standard2.mp3"},
+	["soe"] = "snd_mann_soe.mp3",
+	["gunfreezone"] = "snd_jack_hmcd_shining.mp3" ,
 	["suicidelunatic"] = "zbattle/jihadmode.mp3",
-	["wildwest"] = "snd_jack_hmcd_wildwest.mp3",
+	["wildwest"] = "snd_mann_wildwest.mp3",
 	["supermario"] = "snd_jack_hmcd_psycho.mp3"
 }
 local fade = 0
@@ -297,7 +297,7 @@ local handicap = {
 	[3] = "You are handicapped: you are suffering from hemophilia.",
 	[4] = "You are handicapped: you are physically incapacitated."
 }
-
+--gradient_u = Material("vgui/gradient-u")
 function MODE:HUDPaint()
 	if not MODE.Type or not MODE.TypeObjectives[MODE.Type] then return end
 	if lply:Team() == TEAM_SPECTATOR then return end
@@ -306,7 +306,6 @@ function MODE:HUDPaint()
 	fade = Lerp(FrameTime()*1, fade, math.Clamp(StartTime + 5 - CurTime(),-2,2))
 
 	draw.SimpleText("Homicide | " .. (MODE.TypeNames[MODE.Type] or "Unknown"), "ZB_HomicideMediumLarge", sw * 0.5, sh * 0.1, Color(0,162,255, 255 * fade), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
 	local Rolename = ( lply.isTraitor and MODE.TypeObjectives[MODE.Type].traitor.name ) or ( lply.isGunner and MODE.TypeObjectives[MODE.Type].gunner.name ) or MODE.TypeObjectives[MODE.Type].innocent.name
 	local ColorRole = ( lply.isTraitor and MODE.TypeObjectives[MODE.Type].traitor.color1 ) or ( lply.isGunner and MODE.TypeObjectives[MODE.Type].gunner.color1 ) or MODE.TypeObjectives[MODE.Type].innocent.color1
 	ColorRole.a = 255 * fade
@@ -316,10 +315,13 @@ function MODE:HUDPaint()
 
 	local color_white_faded = Color(255, 255, 255, 255 * fade)
 	color_white_faded.a = 255 * fade
-
+	
 	draw.SimpleText("You are "..Rolename , "ZB_HomicideMediumLarge", sw * 0.5, sh * 0.5, ColorRole, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-
+	local gradient_u = Material("vgui/gradient-d")
+	surface.SetDrawColor(ColorRole)
+	surface.SetMaterial(gradient_u)
+	surface.DrawTexturedRect(sw * 0, sh * 1 - ScreenScale(15), sw / 1, ScreenScale(40))
 
 	local cur_y = sh * 0.5
 

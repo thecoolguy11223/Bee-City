@@ -35,43 +35,7 @@ hook.Add("DrawDeathNotice", "homigrad", function()
 	return false
 end)
 
-hook.Add("HUDWeaponPickedUp", "HidePickedStuff", function(wep)
-	--if not IsValid(lply) or not lply:Alive() then return end
-	if IsValid(lply) and lply.PlayerClassName and lply.PlayerClassName == "Gordon" then
-		return
-	end
 
-	--[[if not IsValid(wep) then return end
-	if not wep.GetPrintName then return end
-	
-	lply:Notify("+ " .. wep:GetPrintName(), 0)]]
-
-	return false
-end)
-
-hook.Add("HUDAmmoPickedUp", "HidePickedStuff", function(ammoname, amt)
-	if IsValid(lply) and lply.PlayerClassName and lply.PlayerClassName == "Gordon" then
-		return
-	end
-
-	return false
-end)
-
-hook.Add("HUDItemPickedUp", "HidePickedStuff", function(itemname)
-	if IsValid(lply) and lply.PlayerClassName and lply.PlayerClassName == "Gordon" then
-		return
-	end
-
-	return false
-end)
-
-hook.Add("HUDDrawPickupHistory", "HidePickedStuff", function()
-	if IsValid(lply) and lply.PlayerClassName and lply.PlayerClassName == "Gordon" then
-		return
-	end
-
-	return false
-end)
 
 --local hg_coolvetica = ConVarExists("hg_coolvetica") and GetConVar("hg_coolvetica") or CreateClientConVar("hg_coolvetica", "0", true, false, "changes every text to coolvetica because its good", 0, 1)
 local hg_font = ConVarExists("hg_font") and GetConVar("hg_font") or CreateClientConVar("hg_font", "Bahnschrift", true, false, "Change UI text font")
