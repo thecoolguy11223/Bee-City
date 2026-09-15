@@ -243,6 +243,7 @@ local jaw_dislocated_msg = {
 
 local input_list = hg.organism.input_list
 input_list.jaw = function(org, bone, dmg, dmgInfo, boneindex, dir, hit, ricochet)
+	if org.headamputated then return end
 	local oldDmg = org.jaw
 
 	local result, vecrand = damageBone(org, 0.25, dmg, dmgInfo, "jaw", boneindex, dir, hit, ricochet)

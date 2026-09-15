@@ -413,7 +413,7 @@ function hg.ExplodeHead(ent)
 		
 		ent.organism.headamputated = true
 		ent.headexploded = true
-
+		org.jaw = 0
 		ent.organism.owner.fullsend = true
 		hg.send_bareinfo(ent.organism)
 	end)

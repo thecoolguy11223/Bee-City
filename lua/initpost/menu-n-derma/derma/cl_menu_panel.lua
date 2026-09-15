@@ -3,7 +3,6 @@ local curent_panel
 local yellow_select = Color(205, 165, 35)
 
 DISCORD_URL = "https://discord.gg/6h9kYhYbuy"
---s
 local Selects = {
     {Title = "Disconnect", Func = function(luaMenu) RunConsoleCommand("disconnect") end},
     {Title = "Main Menu", Func = function(luaMenu) gui.ActivateGameUI() luaMenu:Close() end},

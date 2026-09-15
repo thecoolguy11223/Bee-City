@@ -3,36 +3,28 @@ local MODE = MODE
 
 local playstart
 local ended
+local fade
+local pnl
+
 
 local MusicVolume = GetConVar("snd_musicvolume")
-
-net.Receive("gwars_start", function()
-	surface.PlaySound("zbattle/nigshit.mp3")
-	zb.RemoveFade()
-	playstart = true
-	ended = nil
-
-	sound.PlayFile("sound/music_themes/ghetto_loop.wav", "noblock noplay", function(station)
-		if IsValid(station) then
-			GWARS_LoopStation = station
-			station:SetVolume(1 * MusicVolume:GetFloat())
-			station:EnableLooping(true)
-		end
-	end)
-
-	sound.PlayFile("sound/music_themes/ghetto_police.wav", "noblock noplay", function(station)
-		if IsValid(station) then
-			GWARS_LoopStation2 = station
-			station:SetVolume(1 * MusicVolume:GetFloat())
-			station:EnableLooping(true)
-		end
-	end)
-
-	//music_themes/ghetto_loop.wav
-	//music_themes/ghetto_start.wav
-	
-end)
-
+local apptbl = {
+	[0] = {
+		"models/gang_chem/gang_groove_chem.mdl",
+		"models/gang_groove/gang_1.mdl",
+		"models/gang_groove/gang_2.mdl"
+	},
+	[1] = {
+		"models/gang_ballas/gang_ballas_1.mdl",
+		"models/gang_ballas/gang_ballas_2.mdl",
+		"models/gang_ballas_chem/gang_ballas_chem.mdl"
+	}
+}
+local seqlist = {
+	"ACT_GMOD_SHOWOFF_STAND_02",
+	"ACT_GMOD_SHOWOFF_STAND_01",
+	"ACT_GMOD_SHOWOFF_STAND_04"
+}
 local teams = {
 	[0] = {
 		objective = "Kill all groove mazafakas",
@@ -47,11 +39,100 @@ local teams = {
 		color2 = Color(0, 180, 0)
 	},
 }
+net.Receive("gwars_start", function()
+	surface.PlaySound("zbattle/nigshit.mp3")
+	zb.RemoveFade()
+	playstart = true
+	ended = nil
+
+	sound.PlayFile("sound/music_themes/ghetto_loop.wav", "noblock noplay", function(station)
+		if IsValid(station) then
+			GWARS_LoopStation = station
+			station:SetVolume(1 * MusicVolume:GetFloat())
+			station:EnableLooping(true)
+		end
+	end)
+
+		
+	local sw, sh = ScrW(), ScrH()
+	pnl = vgui.Create( "DPanel" )
+	pnl:SetSize(sw, sh)
+	pnl:SetPos(0, 0)
+	pnl.Paint = function () return	
+	end
+	local panel_w = sw / 4
+	local panel_h = sh / 1
+	local posX = sw - panel_w - 15
+	local posY = sh / 40 
+	local model = vgui.Create("DModelPanel",pnl)
+	local mteam = LocalPlayer():Team()
+	local opposite = mteam == 0 and 1 or 0
+	local listt, listo = apptbl[mteam], apptbl[opposite]
+	local clrbg = teams[mteam].color1
+	model:SetModel( listt[math.random(#listt)] or "models/gang_groove/gang_1.mdl" )
+	model:SetSize( sw / 4, sh / 1 )
+	model:SetPos( sw / 20, sh / 40 ) 
+	model:SetFOV(40)
+	local entity = model:GetEntity()
+	local seq = entity:LookupSequence(seqlist[math.random(#seqlist)])
+	entity:SetSequence( seq )
+	local eyepos = entity:GetBonePosition(entity:LookupBone("ValveBiped.Bip01_Head1"))
+	model:SetLookAt(eyepos)
+	model:SetCamPos(eyepos+Vector(50, 20, -4))
+	model.LayoutEntity = function (self,ent)
+		if not IsValid(ent) then return end
+    	ent:SetRenderMode(RENDERMODE_TRANSALPHA)
+		ent:SetColor(Color(255, 255, 255, 0))
+		ent:SetPos(Vector(0, 0, 0))
+    	ent:SetAngles(Angle(0, 0, 0))
+	end
+	model:SetDirectionalLight(BOX_BOTTOM, clrbg)
+	model:SetDirectionalLight(BOX_FRONT, clrbg)
+	model:SetAlpha(255)
+	model:AlphaTo(0, 1, zb.ROUND_START + 6.5 - CurTime(), function () model:Remove() pnl:Remove() end)
+	local model1 = vgui.Create("DModelPanel",pnl)
+	model1:SetModel( listo[math.random(#listo)] or "models/gang_ballas/gang_ballas_1.mdl" )
+	model1:SetSize( panel_w, panel_h )
+	model1:SetPos( posX, posY )
+	model1:SetFOV(40)
+	local entity1 = model1:GetEntity()
+	local seq1 = entity1:LookupSequence(seqlist[math.random(#seqlist)])
+	entity1:SetSequence( seq1 )
+	local eyepos1 = entity:GetBonePosition(entity:LookupBone("ValveBiped.Bip01_Head1"))
+	model1:SetLookAt(eyepos1)
+	model1:SetCamPos(eyepos1+Vector(50, -20, -4))
+	model1.LayoutEntity = function (self,ent)
+		if not IsValid(ent) then return end
+    	ent:SetRenderMode(RENDERMODE_TRANSALPHA)
+		ent:SetColor(Color(255, 255, 255, 0))
+		ent:SetPos(Vector(0, 0, 0))
+    	ent:SetAngles(Angle(0, 0, 0))
+	end
+	model1:SetAlpha(255)
+	model1:AlphaTo(0, 1, zb.ROUND_START + 6.5 - CurTime(), function () model:Remove() pnl:Remove() end)
+	model1:SetDirectionalLight(BOX_BOTTOM, clrbg)
+	model1:SetDirectionalLight(BOX_FRONT, clrbg)
+	
+	
+
+	sound.PlayFile("sound/music_themes/ghetto_police.wav", "noblock noplay", function(station)
+		if IsValid(station) then
+			GWARS_LoopStation2 = station
+			station:SetVolume(1 * MusicVolume:GetFloat())
+			station:EnableLooping(true)
+		end
+	end)
+
+	//music_themes/ghetto_loop.wav
+	//music_themes/ghetto_start.wav
+	
+end)
 local lerpsnd = 0.3
 function MODE:RenderScreenspaceEffects()
 	if zb.ROUND_START + 7.5 < CurTime() then return end
-	local fade = math.Clamp(zb.ROUND_START + 7.5 - CurTime(), 0, 1)
-	surface.SetDrawColor(0, 0, 0, 255 * fade)
+	local fade1 = math.Clamp(zb.ROUND_START + 7.5 - CurTime(), 0, 1)
+	surface.SetDrawColor(0, 0, 0, 255 * fade1)
+	
 	surface.DrawRect(-1, -1, ScrW() + 1, ScrH() + 1)
 end
 
@@ -66,15 +147,14 @@ surface.CreateFont("timer_Font2", {
 
 function MODE:HUDPaint()
 	//if !lply.organism or !lply.organism.fear then return end
-
 	local timeBeforeSWAT = (zb.ROUND_START - CurTime() + 120)
 	if timeBeforeSWAT > 0 and zb.ROUND_START + 10.5 < CurTime() then
-		local time = string.FormattedTime(timeBeforeSWAT, "%02i:%02i:%02i")
-		local text = "00:00:00"
+		local time = string.FormattedTime(timeBeforeSWAT, "%02i:%02i")
+		local text = "00:00"
 		surface.SetFont("timer_Font2")
 		surface.SetDrawColor(255, 255, 255, 255)
 		local w, h = surface.GetTextSize(text)
-		local w2, h2 = surface.GetTextSize("11:11:11 time left before SWAT arrives!")
+		local w2, h2 = surface.GetTextSize("11:11 time left before SWAT arrives!")
 		surface.SetTextPos(sw * 0.5 - w2 / 2, sh * 0.05)
 		surface.DrawText(time)
 		surface.SetTextPos(sw * 0.5 - w2 / 2 + w, sh * 0.05)
@@ -128,7 +208,7 @@ function MODE:HUDPaint()
 
 	if not lply:Alive() then return end
 	zb.RemoveFade()
-	local fade = math.Clamp(zb.ROUND_START + 8 - CurTime(), 0, 1)
+	fade = math.Clamp(zb.ROUND_START + 8 - CurTime(), 0, 1)
 	local team_ = lply:Team()
 	draw.SimpleText("ZBattle | Gang Wars", "ZB_HomicideMediumLarge", sw * 0.5, sh * 0.1, Color(0, 162, 255, 255 * fade), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	local Rolename = teams[team_].name
@@ -139,7 +219,10 @@ function MODE:HUDPaint()
 	local ColorObj = teams[team_].color2
 	ColorObj.a = 255 * fade
 	draw.SimpleText(Objective, "ZB_HomicideMedium", sw * 0.5, sh * 0.9, ColorObj, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
+	local gradient_u = Material("vgui/gradient-d")
+	surface.SetDrawColor(teams[team_].color1.r,teams[team_].color1.g,teams[team_].color1.b,ColorRole.a)
+	surface.SetMaterial(gradient_u)
+	surface.DrawTexturedRect(sw * 0, sh * 1 - ScreenScale(15), sw / 1, ScreenScale(40))
 	if hg.PluvTown.Active then
 		surface.SetMaterial(hg.PluvTown.PluvMadness)
 		surface.SetDrawColor(255, 255, 255, math.random(175, 255) * fade / 2)
@@ -151,6 +234,9 @@ end
 
 local CreateEndMenu
 net.Receive("gwars_roundend", function()
+	if IsValid(pnl) then
+		pnl:Remove()
+	end
 	ended = true
 	CreateEndMenu()
 end)

@@ -93,24 +93,6 @@ local tblweps = {
 }
 
 
---[[local tblatts = {
-	[0] = {
-		{"optic4"},
-	},
-	[1] = {
-		{"holo14","laser2","grip3"}
-	}
-}]]
-
-local tblarmors = {
-	[0] = {
-		{"ent_armor_vest3","ent_armor_helmet2"}
-	},
-	[1] = {
-		{"ent_armor_vest3","ent_armor_helmet2"}
-	}
-}
-
 function MODE:GetPlySpawn(ply)
 end
 
@@ -119,9 +101,6 @@ function MODE:GiveEquipment()
 	table.CopyFromTo(zb.GetMapPoints( "HMCD_TDM_CT" ),self.CTPoints)
 	self.TPoints = {}
 	table.CopyFromTo(zb.GetMapPoints( "HMCD_TDM_T" ),self.TPoints)
-	timer.Simple(0.1,function()
-		local teamArmorCount = { [0] = 0, [1] = 0 } 
-
 		for _, ply in player.Iterator() do
 			if not ply:Alive() then continue end
 			ply:SetSuppressPickupNotices(true)
@@ -138,28 +117,17 @@ function MODE:GiveEquipment()
 			end
 
 			local tbl = tblweps[ply:Team()]
+			
 			local wep = ply:Give(tbl[math.random(#tbl)])
-			ply:GiveAmmo(wep:GetMaxClip1() * 3, wep:GetPrimaryAmmoType())
-
-			if wep.SetDeagleSkin then
-				//wep:SetDeagleSkin(4)
-				//wep:SetDeagleBodygroup(1)
-			end
-
+			ply:GiveAmmo(wep:GetMaxClip1() * 3, wep:GetPrimaryAmmoType(), true)
 			ply:Give("weapon_bandage_sh")
 			ply:Give("weapon_tourniquet")
 			ply:Give("weapon_fentanyl")
-
 			local hands = ply:Give("weapon_hands_sh")
-			ply:SelectWeapon("weapon_hands_sh")
-
-			timer.Simple(0.1,function()
-				ply.noSound = false
-			end)
-
+			ply:SetActiveWeapon(hands)
+			ply.noSound = false
 			ply:SetSuppressPickupNotices(false)
 		end
-	end)
 end
 
 function MODE:RoundThink()

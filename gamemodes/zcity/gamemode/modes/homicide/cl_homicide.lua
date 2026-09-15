@@ -318,10 +318,7 @@ function MODE:HUDPaint()
 	
 	draw.SimpleText("You are "..Rolename , "ZB_HomicideMediumLarge", sw * 0.5, sh * 0.5, ColorRole, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-	local gradient_u = Material("vgui/gradient-d")
-	surface.SetDrawColor(ColorRole)
-	surface.SetMaterial(gradient_u)
-	surface.DrawTexturedRect(sw * 0, sh * 1 - ScreenScale(15), sw / 1, ScreenScale(40))
+	
 
 	local cur_y = sh * 0.5
 
@@ -401,7 +398,10 @@ function MODE:HUDPaint()
 	local ColorObj = ( lply.isTraitor and MODE.TypeObjectives[MODE.Type].traitor.color2 ) or ( lply.isGunner and MODE.TypeObjectives[MODE.Type].gunner.color2 ) or MODE.TypeObjectives[MODE.Type].innocent.color2 or Color(255,255,255)
 	ColorObj.a = 255 * fade
 	draw.SimpleText( Objective, "ZB_HomicideMedium", sw * 0.5, sh * 0.9, ColorObj, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
+	local gradient_u = Material("vgui/gradient-d")
+	surface.SetDrawColor(ColorObj.r,ColorObj.g,ColorObj.b,ColorRole.a)
+	surface.SetMaterial(gradient_u)
+	surface.DrawTexturedRect(sw * 0, sh * 1 - ScreenScale(15), sw / 1, ScreenScale(40))
 	if hg.PluvTown.Active then
 		surface.SetMaterial(hg.PluvTown.PluvMadness)
 		surface.SetDrawColor(255, 255, 255, math.random(175, 255) * fade / 2)
